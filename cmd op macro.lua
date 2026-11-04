@@ -1,9 +1,9 @@
 function widget:GetInfo()
 	return {
 		name    = "OP Macro",
-		desc    = "Construction turret / constructor helper: windmills on low energy, metal extractor priority, support builds when metal is short, queue skipping on excess energy",
-		author  = "you",
-		date    = "2026",
+		desc    = "with op macro widget you can sit back and let your constructor and construction turrets shift their task around dynamically according to your needs",
+		author  = "Kuchy",
+		date    = "2026-11-04",
 		license = "GNU GPL, v2 or later",
 		layer   = 0,
 		enabled = true,
