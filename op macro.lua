@@ -1,9 +1,9 @@
 function widget:GetInfo()
 	return {
-		name    = "Nano Windmill Assist",
-		desc    = "Construction turret / constructor helper: windmills on low energy, metal extractor priority, support builds when metal is short, queue skipping on excess energy",
-		author  = "you",
-		date    = "2026",
+		name    = "op macro",
+		desc    = "automate many macro tasks. best used with a long queue full of windmills, with construction turrets, energy storages, solars and converters at the end."
+		author  = "Kuchy",
+		date    = "2026-11-03",
 		license = "GNU GPL, v2 or later",
 		layer   = 0,
 		enabled = true,
