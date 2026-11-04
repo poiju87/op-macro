@@ -1,9 +1,9 @@
 function widget:GetInfo()
 	return {
-		name    = "op macro",
-		desc    = "automate many macro tasks. best used with a long queue full of windmills, with construction turrets, energy storages, solars and converters at the end."
-		author  = "Kuchy",
-		date    = "2026-11-03",
+		name    = "OP Macro",
+		desc    = "Construction turret / constructor helper: windmills on low energy, metal extractor priority, support builds when metal is short, queue skipping on excess energy",
+		author  = "you",
+		date    = "2026",
 		license = "GNU GPL, v2 or later",
 		layer   = 0,
 		enabled = true,
@@ -158,9 +158,9 @@ local function buildDefTables()
 	end
 
 	if DEBUG then
-		Spring.Echo("Nano Windmill Assist: basic converters detected: " .. setToNames(converterSet))
-		Spring.Echo("Nano Windmill Assist: T1 metal extractors detected: " .. setToNames(mexSet))
-		Spring.Echo("Nano Windmill Assist: advanced solars detected: " .. setToNames(advSolarSet))
+		Spring.Echo("OP Macro: basic converters detected: " .. setToNames(converterSet))
+		Spring.Echo("OP Macro: T1 metal extractors detected: " .. setToNames(mexSet))
+		Spring.Echo("OP Macro: advanced solars detected: " .. setToNames(advSolarSet))
 	end
 end
 
@@ -200,14 +200,14 @@ local function setPriority(unitID, high)
 			local defID = spGetUnitDefID(unitID)
 			if defID and not reportedNoPriority[defID] then
 				reportedNoPriority[defID] = true
-				Spring.Echo("Nano Windmill Assist: " .. UnitDefs[defID].name .. " has no priority command")
+				Spring.Echo("OP Macro: " .. UnitDefs[defID].name .. " has no priority command")
 			end
 		end
 		return
 	end
 	local wanted = high and 1 or 0
 	if DEBUG then
-		Spring.Echo(string.format("Nano Windmill Assist: unit %d priority command %d, current state %s, wanted %d",
+		Spring.Echo(string.format("OP Macro: unit %d priority command %d, current state %s, wanted %d",
 			unitID, cmdID, tostring(current), wanted))
 	end
 	if current ~= wanted then
@@ -291,7 +291,7 @@ local function manageTurrets()
 					setPriority(tID, true)
 					raised[tID] = true
 					if DEBUG then
-						Spring.Echo("Nano Windmill Assist: turret " .. tID .. " set to high priority for a metal extractor")
+						Spring.Echo("OP Macro: turret " .. tID .. " set to high priority for a metal extractor")
 					end
 				end
 				assistTarget(tID, mex)
@@ -349,7 +349,7 @@ local function manageBuilderPriorities()
 				setPriority(bID, true)
 				raised[bID] = true
 				if DEBUG then
-					Spring.Echo("Nano Windmill Assist: constructor " .. bID .. " set to high priority for a metal extractor")
+					Spring.Echo("OP Macro: constructor " .. bID .. " set to high priority for a metal extractor")
 				end
 			end
 		elseif raised[bID] then
@@ -482,14 +482,14 @@ local function skipQueueToTarget(unitID, targetSets)
 						-- Move the target forward (behind any metal extractor); the orders it jumps over stay queued behind it.
 						-- The original is removed first so the engine does not see a duplicate order.
 						if DEBUG then
-							Spring.Echo(string.format("Nano Windmill Assist: unit %d moved a build ahead of %d queued orders", unitID, i - 1 - lastMex))
+							Spring.Echo(string.format("OP Macro: unit %d moved a build ahead of %d queued orders", unitID, i - 1 - lastMex))
 						end
 						spGiveOrderToUnit(unitID, CMD_REMOVE, { cmd.tag }, 0)
 						spGiveOrderToUnit(unitID, CMD_INSERT,
 							{ lastMex, cmd.cmdID, cmd.opts, cmd.x, cmd.y, cmd.z, cmd.facing or 0 }, CMD.OPT_ALT)
 					else
 						if DEBUG then
-							Spring.Echo(string.format("Nano Windmill Assist: unit %d skipped %d queued orders", unitID, i - 1 - lastMex))
+							Spring.Echo(string.format("OP Macro: unit %d skipped %d queued orders", unitID, i - 1 - lastMex))
 						end
 						for t = lastMex + 1, i - 1 do
 							spGiveOrderToUnit(unitID, CMD_REMOVE, { queue[t].tag }, 0)
@@ -640,7 +640,7 @@ local function tryStartSolarReclaim(frame)
 	reclaimTarget = bestSolar
 	reclaimStartFrame = frame
 	if DEBUG then
-		Spring.Echo(string.format("Nano Windmill Assist: %d turrets reclaiming basic solar %d", #bestTurrets, bestSolar))
+		Spring.Echo(string.format("OP Macro: %d turrets reclaiming basic solar %d", #bestTurrets, bestSolar))
 	end
 end
 
@@ -696,11 +696,11 @@ function widget:Initialize()
 	end
 	lowWindMap = avgWind < AVG_WIND_THRESHOLD
 	if DEBUG then
-		Spring.Echo(string.format("Nano Windmill Assist: map average wind %.1f, %s", avgWind,
+		Spring.Echo(string.format("OP Macro: map average wind %.1f, %s", avgWind,
 			lowWindMap and "advanced solars go before energy storage" or "energy storage goes before advanced solars"))
 	end
 	if #turretDefs == 0 or next(windmillDefs) == nil then
-		Spring.Echo("Nano Windmill Assist: required unit definitions not found, removing widget")
+		Spring.Echo("OP Macro: required unit definitions not found, removing widget")
 		widgetHandler:RemoveWidget()
 	end
 end
@@ -720,7 +720,7 @@ function widget:UnitFinished(unitID, unitDefID, unitTeam)
 	if unitTeam == myTeamID and turretSet[unitDefID] then
 		fastUntilFrame = Spring.GetGameFrame() + FAST_DURATION * 30
 		if DEBUG then
-			Spring.Echo("Nano Windmill Assist: construction turret finished, using the short energy window for " .. FAST_DURATION .. "s")
+			Spring.Echo("OP Macro: construction turret finished, using the short energy window for " .. FAST_DURATION .. "s")
 		end
 	end
 end
